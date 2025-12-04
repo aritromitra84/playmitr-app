@@ -17,9 +17,12 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies (omit optional)
-        env:
-          NPM_CONFIG_OPTIONAL: "false"
+      - name: Force disable optional deps globally in CI
+        run: |
+          echo "optional=false" >> .npmrc
+          cat .npmrc
+
+      - name: Install dependencies (skip optional)
         run: npm ci --omit=optional
 
       - name: Lint
