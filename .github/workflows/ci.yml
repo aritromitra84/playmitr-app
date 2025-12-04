@@ -17,7 +17,7 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies (skip optional native deps)
+      - name: Install dependencies (omit optional)
         env:
           NPM_CONFIG_OPTIONAL: "false"
         run: npm ci --omit=optional
@@ -25,10 +25,10 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Run tests
+      - name: Run tests (non-interactive)
         env:
           CI: true
-        run: npm test
+        run: npx vitest run
 
       - name: Build
         run: npm run build
