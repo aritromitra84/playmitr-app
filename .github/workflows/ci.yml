@@ -1,4 +1,4 @@
-name: CI
+﻿name: CI
 
 on:
   push:
@@ -17,13 +17,17 @@ jobs:
         with:
           node-version: 20
 
-      - name: Force disable optional deps globally in CI
-        run: |
-          echo "optional=false" >> .npmrc
-          cat .npmrc
-
-      - name: Install dependencies (skip optional)
+      - name: Install dependencies (omit optional)
+        env:
+          NPM_CONFIG_OPTIONAL: "false"
         run: npm ci --omit=optional
+
+      - name: Add rollup native fallback for Linux runner (no-save)
+        if: runner.os == 'Linux'
+        run: |
+          # install the linux rollup native optional package that may be required by rollup
+          # use --no-save so we don't change package-lock.json
+          npm i --no-save @rollup/rollup-linux-x64-gnu || true
 
       - name: Lint
         run: npm run lint
